@@ -1,17 +1,15 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Button,
-  Header,
   Content,
   List,
   ListItem,
   Text,
   Footer,
-  FooterTab,
 } from "native-base";
 
-const WordsList = () => {
+const WordsList = ({ navigation }) => {
   const data = [
     "About",
     "Around",
@@ -88,7 +86,6 @@ const WordsList = () => {
             !!wordsForLetter.length && (
               <List>
                 <ListItem
-                    
                   button={false}
                   key={letter}
                   itemDivider
@@ -99,11 +96,7 @@ const WordsList = () => {
                 </ListItem>
                 {wordsForLetter.map((word) => {
                   return (
-                    <ListItem
-                      key={word}
-                      onPress={() => console.log("clicouB")}
-                      style={{ backgroundColor: "#ffffff" }}
-                    >
+                    <ListItem key={word} style={{ backgroundColor: "#ffffff" }}>
                       <Text>{word}</Text>
                     </ListItem>
                   );
@@ -113,8 +106,9 @@ const WordsList = () => {
           );
         })}
       </Content>
-      <Footer style={{}}>
+      <Footer>
         <Button
+          onPress={() => navigation.navigate("WordRegister")}
           active
           style={{
             height: "100%",
