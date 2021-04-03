@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import {
   Content,
   Container,
@@ -14,9 +14,10 @@ import {
   Label,
   Input,
   Footer,
-  Text
+  Text,
+  Textarea,
 } from "native-base";
-import { View } from "react-native";
+import { StyleSheet } from "react-native";
 
 const WordRegister = ({ navigation }) => {
   const [wordTypes] = useState([
@@ -25,33 +26,30 @@ const WordRegister = ({ navigation }) => {
     { type: "Adjective", id: 3 },
     { type: "Noun", id: 4 },
     { type: "Pronoun", id: 5 },
-    { type: "Doesn't matter", id: 6 }
+    { type: "Slang", id: 6 },
+    { type: "Any other", id: 7 },
   ]);
 
-  const [selectedWordType, setSelectedWordType] = useState(null);
+  const [selectedWordType, setSelectedWordType] = useState(1);
 
   return (
     <Container>
-      <Header
-        noShadow
-        style={{ backgroundColor: "#828889" }}
-        androidStatusBarColor="black"
-      >
+      <Header noShadow style={styles.header} androidStatusBarColor="black">
         <Left>
           <Button transparent onPress={() => navigation.navigate("WordsList")}>
             <Icon name="arrow-back" />
           </Button>
         </Left>
         <Body>
-          <Title style={{ fontSize: 20 }}>New Word</Title>
+          <Title style={styles.headerTitle}>New Word</Title>
         </Body>
       </Header>
       <Content>
         <Form>
           <Item picker last>
-            <Label style={{ color: "#4e4e4e", fontSize: 16 }}>Type:</Label>
+            <Label style={styles.formItemLable}>Type:</Label>
             <Picker
-              style={{ flex: 1, color: "#4e4e4e", height: 50 }}
+              style={styles.formPicker}
               iosHeader="Branch"
               Header="Branch"
               mode="dropdown"
@@ -71,36 +69,35 @@ const WordRegister = ({ navigation }) => {
               })}
             </Picker>
           </Item>
-          <Item stackedLabel last >
-            <Label style={{ color: "#4e4e4e", fontSize: 16 }}>Word</Label>
-            <Input style={{ width: 100, color: "#4e4e4e" }} />
-          </Item>
           <Item stackedLabel last>
-            <Label style={{ color: "#4e4e4e", fontSize: 16 }}>
-              Past Simple
-            </Label>
-            <Input style={{ width: 100, color: "#4e4e4e" }} />
+            <Label style={styles.formItemLable}>Word</Label>
+            <Input style={styles.formItemInput} />
           </Item>
+          {selectedWordType == 1 && (
+            <>
+              <Item stackedLabel last>
+                <Label style={styles.formItemLable}>Past Simple</Label>
+                <Input style={styles.formItemInput} />
+              </Item>
+              <Item stackedLabel last>
+                <Label style={styles.formItemLable}>Past Participle</Label>
+                <Input style={styles.formItemInput} />
+              </Item>
+            </>
+          )}
           <Item stackedLabel last>
-            <Label style={{ color: "#4e4e4e", fontSize: 16 }}>
-              Past Participle
-            </Label>
-            <Input style={{ width: 100, color: "#4e4e4e" }} />
+            <Label style={styles.formItemLable}>Annotations</Label>
+            <Textarea style={styles.formTextArea} rowSpan={5} bordered />
           </Item>
         </Form>
       </Content>
       <Footer>
         <Button
-          onPress={() => navigation.navigate("WordRegister")}
+          onPress={() => navigation.navigate("WordsList")}
           active
-          style={{
-            height: "100%",
-            width: "100%",
-            justifyContent: "center",
-            backgroundColor: "green",
-          }}
+          style={styles.footerButton}
         >
-          <Text style={{ fontSize: 20, fontWeight: "Green" }}>Do it!</Text>
+          <Text style={styles.footerText}>Do it!</Text>
         </Button>
       </Footer>
     </Container>
@@ -108,3 +105,44 @@ const WordRegister = ({ navigation }) => {
 };
 
 export default WordRegister;
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: "#828889",
+  },
+  headerTitle: {
+    fontSize: 20,
+  },
+  formItemLable: {
+    color: "#4e4e4e",
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+  formItemInput: {
+    width: "100%",
+    color: "#4e4e4e",
+    fontSize: 16,
+  },
+  formPicker: {
+    flex: 1,
+    color: "#4e4e4e",
+    height: 50,
+  },
+  formTextArea: {
+    width: "100%",
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderBottomWidth: 0,
+    paddingLeft: 0
+  },
+  footerButton: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    backgroundColor: "green",
+  },
+  footerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+});
