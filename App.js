@@ -33,16 +33,18 @@ export default class App extends Component {
       );
     } else {
       return (
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="WordsList" component={WordsList} />
-            <Stack.Screen name="WordRegister" component={WordRegister} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <Root>
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name="WordsList" component={WordsList} />
+              <Stack.Screen name="WordRegister" component={WordRegister} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Root>
       );
     }
   }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Content,
   Container,
@@ -16,8 +16,10 @@ import {
   Footer,
   Text,
   Textarea,
+  Toast,
 } from "native-base";
 import { StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const WordRegister = ({ navigation }) => {
   const [wordTypes] = useState([
@@ -30,7 +32,59 @@ const WordRegister = ({ navigation }) => {
     { type: "Any other", id: 7 },
   ]);
 
-  const [selectedWordType, setSelectedWordType] = useState(1);
+  const [formHandle, setFormHandle] = useState({
+    wordType: 1,
+    word: "",
+    pastSimple: "",
+    pastParticiple: "",
+    annotations: "",
+  });
+
+  const [userWordsData, setUserWordsData] = useState([]);
+
+  useEffect(() => {
+    getUserWordsStoragedData();
+  }, []);
+
+  const getUserWordsStoragedData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@storage_userWords");
+      if (jsonValue !== null) {
+        setUserWordsData(JSON.parse(jsonValue));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const submitForm = () => {
+    if (formHandle.word == "") {
+      Toast.show({
+        text: "Word was not filled",
+        buttonText: "Okay",
+        type: "danger",
+        duration: 4000,
+        buttonStyle: { height: 35 },
+      });
+    } else {
+      userWordsData.push({
+        word: formHandle.word,
+        pastSimple: formHandle.pastSimple,
+        pastParticiple: formHandle.pastParticiple,
+        annotations: formHandle.annotations,
+      });
+      updateUserWordsStoragedData(JSON.stringify(userWordsData));
+      navigation.navigate("WordsList");
+    }
+  };
+
+  const updateUserWordsStoragedData = async (value) => {
+    try {
+      await AsyncStorage.setItem("@storage_userWords", value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Container>
@@ -55,8 +109,17 @@ const WordRegister = ({ navigation }) => {
               mode="dropdown"
               placeholder="Select branch"
               headerBackButtonText="Geri"
-              selectedValue={selectedWordType}
-              onValueChange={(value) => setSelectedWordType(value)}
+              selectedValue={formHandle.wordType}
+              onValueChange={(value) => {
+                if (value !== 1) {
+                  setFormHandle({
+                    ...formHandle,
+                    pastSimple: "",
+                    pastParticiple: "",
+                  });
+                }
+                setFormHandle({ ...formHandle, wordType: value });
+              }}
             >
               {wordTypes.map((wordType, position) => {
                 return (
@@ -70,30 +133,54 @@ const WordRegister = ({ navigation }) => {
             </Picker>
           </Item>
           <Item stackedLabel last>
-            <Label style={styles.formItemLable}>Word</Label>
-            <Input style={styles.formItemInput} />
+            <Label style={styles.formItemLable}>{(formHandle.wordType == 1 && "Base Form") || "Word"}</Label>
+            <Input
+              style={styles.formItemInput}
+              onChangeText={(value) => {
+                setFormHandle({ ...formHandle, word: value });
+              }}
+            />
           </Item>
-          {selectedWordType == 1 && (
+          {formHandle.wordType == 1 && (
             <>
               <Item stackedLabel last>
                 <Label style={styles.formItemLable}>Past Simple</Label>
-                <Input style={styles.formItemInput} />
+                <Input
+                  style={styles.formItemInput}
+                  onChangeText={(value) =>
+                    setFormHandle({ ...formHandle, pastSimple: value })
+                  }
+                />
               </Item>
               <Item stackedLabel last>
                 <Label style={styles.formItemLable}>Past Participle</Label>
-                <Input style={styles.formItemInput} />
+                <Input
+                  style={styles.formItemInput}
+                  onChangeText={(value) =>
+                    setFormHandle({ ...formHandle, pastParticiple: value })
+                  }
+                />
               </Item>
             </>
           )}
           <Item stackedLabel last>
             <Label style={styles.formItemLable}>Annotations</Label>
-            <Textarea style={styles.formTextArea} rowSpan={5} bordered />
+            <Textarea
+              style={styles.formTextArea}
+              rowSpan={5}
+              bordered
+              onChangeText={(value) =>
+                setFormHandle({ ...formHandle, annotations: value })
+              }
+            />
           </Item>
         </Form>
       </Content>
       <Footer>
         <Button
-          onPress={() => navigation.navigate("WordsList")}
+          onPress={() => {
+            submitForm();
+          }}
           active
           style={styles.footerButton}
         >
@@ -133,7 +220,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderBottomWidth: 0,
-    paddingLeft: 0
+    paddingLeft: 0,
   },
   footerButton: {
     height: "100%",
