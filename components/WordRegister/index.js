@@ -57,10 +57,16 @@ const WordRegister = ({ navigation }) => {
     }
   };
 
+  const goBackToWordsList = () => {
+    navigation.push("WordsList");
+  };
+
   const submitForm = () => {
     if (formHandle.word == "") {
+      const text = formHandle.wordType === 1 ? "Base form was not filled!" : "Word was not filled!"
+      
       Toast.show({
-        text: "Word was not filled",
+        text: text,
         buttonText: "Okay",
         type: "danger",
         duration: 4000,
@@ -68,13 +74,14 @@ const WordRegister = ({ navigation }) => {
       });
     } else {
       userWordsData.push({
+        wordType: formHandle.wordType,
         word: formHandle.word,
         pastSimple: formHandle.pastSimple,
         pastParticiple: formHandle.pastParticiple,
-        annotations: formHandle.annotations,
+        annotations: formHandle.annotations
       });
       updateUserWordsStoragedData(JSON.stringify(userWordsData));
-      navigation.navigate("WordsList");
+      navigation.push("WordsList");
     }
   };
 
@@ -90,7 +97,7 @@ const WordRegister = ({ navigation }) => {
     <Container>
       <Header noShadow style={styles.header} androidStatusBarColor="black">
         <Left>
-          <Button transparent onPress={() => navigation.navigate("WordsList")}>
+          <Button transparent onPress={() => goBackToWordsList()}>
             <Icon name="arrow-back" />
           </Button>
         </Left>
@@ -133,7 +140,9 @@ const WordRegister = ({ navigation }) => {
             </Picker>
           </Item>
           <Item stackedLabel last>
-            <Label style={styles.formItemLable}>{(formHandle.wordType == 1 && "Base Form") || "Word"}</Label>
+            <Label style={styles.formItemLable}>
+              {(formHandle.wordType == 1 && "Base Form") || "Word"}
+            </Label>
             <Input
               style={styles.formItemInput}
               onChangeText={(value) => {

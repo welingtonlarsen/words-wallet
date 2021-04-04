@@ -8,6 +8,7 @@ import {
   Text,
   Footer,
 } from "native-base";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const WordsList = ({ navigation }) => {
   const data = [
@@ -24,6 +25,23 @@ const WordsList = ({ navigation }) => {
     "Good",
     "Height",
   ];
+
+  const [data2, setData2] = useState([
+    {
+      wordType: 1,
+      word: "Oie",
+      pastSimple: "Oie",
+      pastParticiple: "Oie",
+      annotations: "Oie",
+    },
+    {
+      wordType: 3,
+      word: "Kakaka",
+      pastSimple: "",
+      pastParticiple: "",
+      annotations: "",
+    },
+  ]);
 
   const [alphabet, setAlphabet] = useState([
     "A",
@@ -55,23 +73,50 @@ const WordsList = ({ navigation }) => {
 
   const [alphabeticWords, setAlphabeticWords] = useState(null);
 
+  console.log(data2);
+  useEffect(() => {
+    getUserWordsStoragedData();
+  }, []);
+
   useEffect(() => {
     setAlphabeticWords(() => {
       const finalObject = {};
       alphabet.forEach((letter, position) => {
-        const words = data.filter((word) => word[0] === letter);
-        finalObject[letter] = words;
+        const words = data2.filter((wordObj) => wordObj.word[0] === letter);
+        finalObject[letter] = words.map((wordObj) => wordObj.word);
       });
-
       return finalObject;
     });
-  }, []);
+  }, [data2]);
+
+  const getUserWordsStoragedData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@storage_userWords");
+      if (jsonValue !== null) {
+        setData2(JSON.parse(jsonValue));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   if (!alphabeticWords) {
     return (
       <Container>
         <Content>
           <Text>Fetching your's words!</Text>
+          <Button
+            onPress={() => navigation.navigate("WordRegister")}
+            active
+            style={{
+              height: "100%",
+              width: "100%",
+              justifyContent: "center",
+              backgroundColor: "#828889",
+            }}
+          >
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>New Word</Text>
+          </Button>
         </Content>
       </Container>
     );
@@ -94,9 +139,9 @@ const WordsList = ({ navigation }) => {
                 >
                   <Text>{letter}</Text>
                 </ListItem>
-                {wordsForLetter.map((word) => {
+                {wordsForLetter.map((word, position) => {
                   return (
-                    <ListItem key={word} style={{ backgroundColor: "#ffffff" }}>
+                    <ListItem key={word + position} style={{ backgroundColor: "#ffffff" }}>
                       <Text>{word}</Text>
                     </ListItem>
                   );
@@ -108,7 +153,7 @@ const WordsList = ({ navigation }) => {
       </Content>
       <Footer>
         <Button
-          onPress={() => navigation.navigate("WordRegister")}
+          onPress={() => navigation.push("WordRegister")}
           active
           style={{
             height: "100%",
