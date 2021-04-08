@@ -1,0 +1,33 @@
+<div align="center">
+
+![](https://img.shields.io/badge/Status-Under%20Development-orange)
+
+</div>
+
+<div align="center">
+
+# Words Wallet
+
+This mobile app is still in development. It is like a wallet of english words. In other words, with this app the user can save new learned words to review them in the future.
+
+![](https://img.shields.io/badge/Autor-Welington%20Larsen-brightgreen)
+![](https://img.shields.io/badge/Language-Javascript-brightgreen)
+![](https://img.shields.io/badge/Framework-React%20Native-brightgreen)
+
+</div>
+
+## Technologies
+
+- React Native
+- Expo
+- Javascript
+- Native Base
+- React Navigation
+- React Native Async Storage
+
+## Execution
+
+- Scripts
+  ### Run the application (you can use npm or yarn)
+  - 1° command: `npm install`
+  - 2° command: `npm start`
