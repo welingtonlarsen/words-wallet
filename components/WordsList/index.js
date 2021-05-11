@@ -13,11 +13,36 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const WordsList = ({ navigation }) => {
   const [userWordsData, setUserWordsData] = useState([]);
-  const [alphabetData, setAlphabetData] = useState([]);
+  const [alphabetData] = useState([
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "Y",
+    "Z",
+  ]);
   const [alphabeticWords, setAlphabeticWords] = useState(null);
 
   useEffect(() => {
-    getAlphabetStoragedData();
     getUserWordsStoragedData();
   }, []);
 
@@ -26,17 +51,6 @@ const WordsList = ({ navigation }) => {
       const jsonValue = await AsyncStorage.getItem("@storage_userWords");
       if (jsonValue !== null) {
         setUserWordsData(JSON.parse(jsonValue));
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const getAlphabetStoragedData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("@storage_alphabet");
-      if (jsonValue !== null) {
-        setAlphabetData(JSON.parse(jsonValue));
       }
     } catch (e) {
       console.log(e);
@@ -55,6 +69,10 @@ const WordsList = ({ navigation }) => {
       return finalObject;
     });
   }, [userWordsData]);
+
+  const filterWordFromUserWordsData = (word) => {
+    return userWordsData.filter((wordObject) => wordObject.word === word)[0];
+  };
 
   if (!alphabeticWords) {
     return (
@@ -84,7 +102,15 @@ const WordsList = ({ navigation }) => {
                 </ListItem>
                 {wordsForLetter.map((word, position) => {
                   return (
-                    <ListItem key={word + position} style={styles.listItem}>
+                    <ListItem
+                      key={word + position}
+                      style={styles.listItem}
+                      onPress={() =>
+                        navigation.navigate("WordDetail", {
+                          wordObject: filterWordFromUserWordsData(word)
+                        })
+                      }
+                    >
                       <Text>{word}</Text>
                     </ListItem>
                   );
@@ -94,6 +120,7 @@ const WordsList = ({ navigation }) => {
           );
         })}
       </Content>
+
       <Footer>
         <Button
           onPress={() => navigation.push("WordRegister")}

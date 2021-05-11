@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Root } from "native-base";
 import WordsList from "./components/WordsList";
 import WordRegister from "./components/WordRegister";
+import WordDetail from "./components/WordDetail"
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -42,6 +43,7 @@ export default class App extends Component {
             >
               <Stack.Screen name="WordsList" component={WordsList} />
               <Stack.Screen name="WordRegister" component={WordRegister} />
+              <Stack.Screen name="WordDetail" component={WordDetail} />
             </Stack.Navigator>
           </NavigationContainer>
         </Root>
