@@ -7,6 +7,11 @@ import {
   ListItem,
   Text,
   Footer,
+  Header,
+  Left,
+  Icon,
+  Body,
+  Title
 } from "native-base";
 import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -74,6 +79,10 @@ const WordsList = ({ navigation }) => {
     return userWordsData.filter((wordObject) => wordObject.word === word)[0];
   };
 
+  const goToDetailsPage = () => {
+    navigation.navigate("Categories");
+  }
+
   if (!alphabeticWords) {
     return (
       <Container>
@@ -86,6 +95,16 @@ const WordsList = ({ navigation }) => {
 
   return (
     <Container>
+      <Header noShadow style={styles.header} androidStatusBarColor="black">
+        <Left>
+          <Button transparent onPress={() => goToDetailsPage()}>
+            <Icon name="arrow-back" />
+          </Button>
+        </Left>
+        <Body>
+          <Title style={styles.headerTitle}>Words List</Title>
+        </Body>
+      </Header>
       <Content>
         {Object.keys(alphabeticWords).map((letter) => {
           const wordsForLetter = alphabeticWords[letter];
@@ -106,8 +125,8 @@ const WordsList = ({ navigation }) => {
                       key={word + position}
                       style={styles.listItem}
                       onPress={() =>
-                        navigation.navigate("WordDetail", {
-                          wordObject: filterWordFromUserWordsData(word)
+                        navigation.navigate("WordRegister", {
+                          wordObject: filterWordFromUserWordsData(word),
                         })
                       }
                     >
@@ -137,6 +156,12 @@ const WordsList = ({ navigation }) => {
 export default WordsList;
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: "#828889",
+  },
+  headerTitle: {
+    fontSize: 20,
+  },
   listItemDivisor: {
     backgroundColor: "#e5e9ed",
   },

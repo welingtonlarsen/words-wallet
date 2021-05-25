@@ -21,7 +21,36 @@ import {
 import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const WordRegister = ({ navigation }) => {
+const WordRegister = ({ route, navigation }) => {
+  const [isNewWord, setIsNewWord] = useState(true);
+  const [formHandle, setFormHandle] = useState({
+    wordType: 1,
+    word: "",
+    pastSimple: "",
+    pastParticiple: "",
+    annotations: "",
+  });
+
+  const { wordObject } = route.params ? route.params : {};
+
+  useEffect(() => {
+    if (wordObject && wordObject.wordType !== 1) {
+      console.log('oie 1')
+      setFormHandle({
+        wordType: wordObject.wordType,
+        word: wordObject.word,
+        pastSimple: "",
+        pastParticiple: "",
+        annotations: "",
+      });
+      setIsNewWord(false);
+    } else if (wordObject) {
+      console.log('oie2')
+      setFormHandle(wordObject)
+      setIsNewWord(false)
+    }
+  }, [wordObject]);
+
   const [wordTypes] = useState([
     { type: "Verb", id: 1 },
     { type: "Adverb", id: 2 },
@@ -31,14 +60,6 @@ const WordRegister = ({ navigation }) => {
     { type: "Slang", id: 6 },
     { type: "Any other", id: 7 },
   ]);
-
-  const [formHandle, setFormHandle] = useState({
-    wordType: 1,
-    word: "",
-    pastSimple: "",
-    pastParticiple: "",
-    annotations: "",
-  });
 
   const [userWordsData, setUserWordsData] = useState([]);
 
@@ -63,8 +84,11 @@ const WordRegister = ({ navigation }) => {
 
   const submitForm = () => {
     if (formHandle.word == "") {
-      const text = formHandle.wordType === 1 ? "Base form was not filled!" : "Word was not filled!"
-      
+      const text =
+        formHandle.wordType === 1
+          ? "Base form was not filled!"
+          : "Word was not filled!";
+
       Toast.show({
         text: text,
         buttonText: "Okay",
@@ -78,7 +102,7 @@ const WordRegister = ({ navigation }) => {
         word: formHandle.word,
         pastSimple: formHandle.pastSimple,
         pastParticiple: formHandle.pastParticiple,
-        annotations: formHandle.annotations
+        annotations: formHandle.annotations,
       });
       updateUserWordsStoragedData(JSON.stringify(userWordsData));
       navigation.push("WordsList");
@@ -102,7 +126,7 @@ const WordRegister = ({ navigation }) => {
           </Button>
         </Left>
         <Body>
-          <Title style={styles.headerTitle}>New Word</Title>
+          <Title style={styles.headerTitle}>{isNewWord && 'New Word' || 'Word Details'}</Title>
         </Body>
       </Header>
       <Content>
@@ -144,6 +168,7 @@ const WordRegister = ({ navigation }) => {
               {(formHandle.wordType == 1 && "Base Form") || "Word"}
             </Label>
             <Input
+              value={formHandle.word}
               style={styles.formItemInput}
               onChangeText={(value) => {
                 setFormHandle({ ...formHandle, word: value });
@@ -155,6 +180,7 @@ const WordRegister = ({ navigation }) => {
               <Item stackedLabel last>
                 <Label style={styles.formItemLable}>Past Simple</Label>
                 <Input
+                  value={formHandle.pastSimple}
                   style={styles.formItemInput}
                   onChangeText={(value) =>
                     setFormHandle({ ...formHandle, pastSimple: value })
@@ -164,6 +190,7 @@ const WordRegister = ({ navigation }) => {
               <Item stackedLabel last>
                 <Label style={styles.formItemLable}>Past Participle</Label>
                 <Input
+                  value={formHandle.pastParticiple}
                   style={styles.formItemInput}
                   onChangeText={(value) =>
                     setFormHandle({ ...formHandle, pastParticiple: value })
@@ -175,6 +202,7 @@ const WordRegister = ({ navigation }) => {
           <Item stackedLabel last>
             <Label style={styles.formItemLable}>Annotations</Label>
             <Textarea
+              value={formHandle.annotations}
               style={styles.formTextArea}
               rowSpan={5}
               bordered
@@ -193,7 +221,9 @@ const WordRegister = ({ navigation }) => {
           active
           style={styles.footerButton}
         >
-          <Text style={styles.footerText}>Do it!</Text>
+          <Text style={styles.footerText}>
+            {(isNewWord && "Do it!") || "Save"}
+          </Text>
         </Button>
       </Footer>
     </Container>

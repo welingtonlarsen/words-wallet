@@ -12,13 +12,7 @@ import {
 } from "native-base";
 import { StyleSheet } from "react-native";
 
-const WordDetail = ({ route, navigation }) => {
-  const { wordObject } = route.params;
-
-  useEffect(() => {
-    console.log(wordObject);
-  }, [wordObject]);
-
+const Categories = ({ navigation }) => {
   const goBackToWordsList = () => {
     navigation.push("WordsList");
   };
@@ -32,18 +26,18 @@ const WordDetail = ({ route, navigation }) => {
           </Button>
         </Left>
         <Body>
-          <Title style={styles.headerTitle}>Word Detail</Title>
+          <Title style={styles.headerTitle}>Categories</Title>
         </Body>
       </Header>
 
       <Content>
-        <Text>Word detail</Text>
+        <Text>Categories</Text>
       </Content>
     </Container>
   );
 };
 
-export default WordDetail;
+export default Categories;
 
 const styles = StyleSheet.create({
   header: {

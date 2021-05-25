@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import { Root } from "native-base";
+import Categories from "./components/Categories"
 import WordsList from "./components/WordsList";
 import WordRegister from "./components/WordRegister";
 import WordDetail from "./components/WordDetail"
@@ -41,6 +42,7 @@ export default class App extends Component {
                 headerShown: false,
               }}
             >
+              <Stack.Screen name="Categories" component={Categories} />
               <Stack.Screen name="WordsList" component={WordsList} />
               <Stack.Screen name="WordRegister" component={WordRegister} />
               <Stack.Screen name="WordDetail" component={WordDetail} />
