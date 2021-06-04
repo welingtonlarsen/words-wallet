@@ -22,21 +22,57 @@ import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CategoryRegister = ({ navigation }) => {
-  
-  const submitForm = () => {};
+  const [userCategories, setUserCategories] = useState([]);
+  const [newCategoryName, setNewCategoryName] = useState("");
+
+  useEffect(() => {
+    fetchUserCategoriesInAsyncStorage();
+  }, []);
+
+  const fetchUserCategoriesInAsyncStorage = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@storage_userCategories");
+      if (jsonValue !== null) {
+        setUserCategories(JSON.parse(jsonValue));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const submitForm = async () => {
+    await saveNewCategory();
+    navigation.push("Categories");
+    setNewCategoryName("");
+  };
+
+  const saveNewCategory = async () => {
+    const userCategoriesToPersist = userCategories;
+    userCategoriesToPersist.push({
+      id: userCategories.length ? userCategories[userCategories.length - 1].id + 1 : 1,
+      categoryName: newCategoryName,
+    });
+
+    try {
+      await AsyncStorage.setItem(
+        "@storage_userCategories",
+        JSON.stringify(userCategoriesToPersist)
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Container>
       <Header noShadow style={styles.header} androidStatusBarColor="black">
         <Left>
-          <Button transparent onPress={() => navigation.push("Categories")}>
+          <Button transparent onPress={() => navigation.navigate("Categories")}>
             <Icon name="arrow-back" />
           </Button>
         </Left>
         <Body>
-          <Title style={styles.headerTitle}>
-            Category Register
-          </Title>
+          <Title style={styles.headerTitle}>Category Register</Title>
         </Body>
       </Header>
       <Content>
@@ -44,11 +80,9 @@ const CategoryRegister = ({ navigation }) => {
           <Item stackedLabel last>
             <Label style={styles.formItemLable}>Category Name</Label>
             <Input
-              value={'blablabla'}
+              value={newCategoryName}
               style={styles.formItemInput}
-              onChangeText={(value) =>
-                console.log(value)
-              }
+              onChangeText={(value) => setNewCategoryName(value)}
             />
           </Item>
         </Form>

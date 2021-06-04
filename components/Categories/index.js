@@ -12,12 +12,31 @@ import {
   List,
   ListItem,
   Right,
-  Footer
+  Footer,
 } from "native-base";
 
 import { StyleSheet } from "react-native";
+import { useState } from "react/cjs/react.development";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Categories = ({ navigation }) => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchUserCategoriesInAsyncStorage()
+  }, []);
+
+  const fetchUserCategoriesInAsyncStorage = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@storage_userCategories");
+      if (jsonValue !== null) {
+        setCategories(JSON.parse(jsonValue));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const goBackToWordsList = () => {
     navigation.push("WordsList");
   };
@@ -37,30 +56,18 @@ const Categories = ({ navigation }) => {
 
       <Content>
         <List>
-          <ListItem onPress={() => goBackToWordsList()}>
-            <Left>
-              <Text>Formula 1 Serie</Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </ListItem>
-          <ListItem>
-            <Left>
-              <Text>English class month may</Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </ListItem>
-          <ListItem>
-            <Left>
-              <Text>Youtube Video</Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </ListItem>
+          {categories.map((obj) => {
+            return (
+              <ListItem key={obj.id} onPress={() => goBackToWordsList()}>
+                <Left>
+                  <Text>{obj.categoryName}</Text>
+                </Left>
+                <Right>
+                  <Icon name="arrow-forward" />
+                </Right>
+              </ListItem>
+            );
+          })}
         </List>
       </Content>
       <Footer>
