@@ -31,9 +31,10 @@ const WordRegister = ({ route, navigation }) => {
     annotations: "",
   });
 
-  const { wordObject } = route.params ? route.params : {};
+  const { wordObject, category } = route.params ? route.params : {};
 
   useEffect(() => {
+    console.log(category)
     if (wordObject && wordObject.wordType !== 1) {
       console.log('oie 1')
       setFormHandle({
@@ -79,7 +80,9 @@ const WordRegister = ({ route, navigation }) => {
   };
 
   const goBackToWordsList = () => {
-    navigation.push("WordsList");
+    navigation.push("WordsList", {
+      category
+    });
   };
 
   const submitForm = () => {
@@ -98,6 +101,7 @@ const WordRegister = ({ route, navigation }) => {
       });
     } else {
       userWordsData.push({
+        categoryId: category.id,
         wordType: formHandle.wordType,
         word: formHandle.word,
         pastSimple: formHandle.pastSimple,
@@ -105,7 +109,9 @@ const WordRegister = ({ route, navigation }) => {
         annotations: formHandle.annotations,
       });
       updateUserWordsStoragedData(JSON.stringify(userWordsData));
-      navigation.push("WordsList");
+      navigation.push("WordsList", {
+        category
+      });
     }
   };
 

@@ -16,7 +16,8 @@ import {
 import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const WordsList = ({ navigation }) => {
+const WordsList = ({ route, navigation }) => {
+  const { category } = route.params ? route.params : {};
   const [userWordsData, setUserWordsData] = useState([]);
   const [alphabetData] = useState([
     "A",
@@ -67,7 +68,7 @@ const WordsList = ({ navigation }) => {
       const finalObject = {};
       alphabetData.forEach((letter, position) => {
         const words = userWordsData.filter(
-          (wordObj) => wordObj.word[0] === letter
+          (wordObj) => wordObj.word[0] === letter && wordObj.categoryId === category.id
         );
         finalObject[letter] = words.map((wordObj) => wordObj.word);
       });
@@ -127,6 +128,7 @@ const WordsList = ({ navigation }) => {
                       onPress={() =>
                         navigation.navigate("WordRegister", {
                           wordObject: filterWordFromUserWordsData(word),
+                          category
                         })
                       }
                     >
@@ -142,7 +144,9 @@ const WordsList = ({ navigation }) => {
 
       <Footer>
         <Button
-          onPress={() => navigation.push("WordRegister")}
+          onPress={() => navigation.push("WordRegister", {
+            category
+          })}
           active
           style={styles.button}
         >

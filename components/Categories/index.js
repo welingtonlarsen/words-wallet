@@ -37,8 +37,15 @@ const Categories = ({ navigation }) => {
     }
   };
 
+  const goToCategoryWordsList = (category) => {
+    console.log(category)
+    navigation.push("WordsList", {
+      category
+    });
+  }
+
   const goBackToWordsList = () => {
-    navigation.push("WordsList");
+    // console.log("oie")
   };
 
   return (
@@ -56,11 +63,11 @@ const Categories = ({ navigation }) => {
 
       <Content>
         <List>
-          {categories.map((obj) => {
+          {categories.map((category) => {
             return (
-              <ListItem key={obj.id} onPress={() => goBackToWordsList()}>
+              <ListItem key={category.id} onPress={() => goToCategoryWordsList(category)}>
                 <Left>
-                  <Text>{obj.categoryName}</Text>
+                  <Text>{category.categoryName}</Text>
                 </Left>
                 <Right>
                   <Icon name="arrow-forward" />
