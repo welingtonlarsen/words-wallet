@@ -34,9 +34,7 @@ const WordRegister = ({ route, navigation }) => {
   const { wordObject, category } = route.params ? route.params : {};
 
   useEffect(() => {
-    console.log(category)
     if (wordObject && wordObject.wordType !== 1) {
-      console.log('oie 1')
       setFormHandle({
         wordType: wordObject.wordType,
         word: wordObject.word,
@@ -46,7 +44,6 @@ const WordRegister = ({ route, navigation }) => {
       });
       setIsNewWord(false);
     } else if (wordObject) {
-      console.log('oie2')
       setFormHandle(wordObject)
       setIsNewWord(false)
     }

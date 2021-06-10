@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import { Root } from "native-base";
+import Menu from "./components/Menu"
+import Cards from "./components/Cards"
 import Categories from "./components/Categories"
 import CategoryRegister from './components/CategoryRegister'
 import WordsList from "./components/WordsList";
@@ -43,6 +45,8 @@ export default class App extends Component {
                 headerShown: false,
               }}
             >
+              <Stack.Screen name="Menu" component={Menu} />
+              <Stack.Screen name="Cards" component={Cards} />
               <Stack.Screen name="Categories" component={Categories} />
               <Stack.Screen name="CategoryRegister" component={CategoryRegister} />
               <Stack.Screen name="WordsList" component={WordsList} />

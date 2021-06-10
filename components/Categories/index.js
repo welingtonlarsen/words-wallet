@@ -38,21 +38,16 @@ const Categories = ({ navigation }) => {
   };
 
   const goToCategoryWordsList = (category) => {
-    console.log(category)
     navigation.push("WordsList", {
       category
     });
   }
 
-  const goBackToWordsList = () => {
-    // console.log("oie")
-  };
-
   return (
     <Container>
       <Header noShadow style={styles.header} androidStatusBarColor="black">
         <Left>
-          <Button transparent onPress={() => goBackToWordsList()}>
+          <Button transparent onPress={() => navigation.navigate('Menu')}>
             <Icon name="arrow-back" />
           </Button>
         </Left>
