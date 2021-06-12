@@ -12,13 +12,17 @@ import {
   Right,
   Button,
   Icon,
-  CheckBox,
   Footer,
 } from "native-base";
 import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import FrontCard from "./FrontCard";
+import BackCard from "./BackCard";
+
 const Cards = ({ route, navigation }) => {
+  const [showBackCard, setShowBackCard] = useState(false);
+
   return (
     <Container>
       <Header noShadow style={styles.header} androidStatusBarColor="black">
@@ -32,33 +36,9 @@ const Cards = ({ route, navigation }) => {
         </Body>
       </Header>
       <Content padder>
-        <Card>
-          <CardItem header bordered>
-            <Text>Word</Text>
-          </CardItem>
-          <CardItem bordered>
-            <Body>
-              <Text>
-                Observations and more things NativeBase is a free and open
-                source framework that enable developers to build high-quality
-                mobile apps using React Native iOS and Android apps with a
-                fusion of ES6.
-              </Text>
-            </Body>
-          </CardItem>
-          <CardItem footer bordered>
-            <Right>
-              <Button rounded success style={{marginRight: -70, maxHeight: 40}}>
-                <Text>Learned</Text>
-              </Button>
-            </Right>
-            <Right>
-              <Button rounded light style={{maxHeight: 40}}>
-                <Text>Go Back</Text>
-              </Button>
-            </Right>
-          </CardItem>
-        </Card>
+        {(showBackCard && (
+          <BackCard clickGoBack={() => setShowBackCard(false)} />
+        )) || <FrontCard clickDontKnow={() => setShowBackCard(true)} />}
       </Content>
       <Footer>
         <Button
