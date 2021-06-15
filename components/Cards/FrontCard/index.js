@@ -11,12 +11,12 @@ import {
 } from "native-base";
 import { StyleSheet } from "react-native";
 
-const FrontCard = ({ clickDontKnow }) => {
+const FrontCard = ({ word, clickDontKnow }) => {
   return (
     <Content padder>
       <Card>
         <CardItem style={styles.cardItemWord} header bordered>
-          <Text style={styles.word}>Word</Text>
+          <Text style={styles.word}>{word}</Text>
         </CardItem>
         <CardItem style={styles.cardItemButtom} footer bordered>
           <Button

@@ -4,24 +4,43 @@ import {
   Header,
   Title,
   Content,
-  Card,
-  CardItem,
   Text,
   Body,
   Left,
-  Right,
   Button,
   Icon,
   Footer,
 } from "native-base";
 import { StyleSheet } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import FrontCard from "./FrontCard";
 import BackCard from "./BackCard";
 
+import useDao from "../../database/useDao";
+
 const Cards = ({ route, navigation }) => {
+  const [unknownUserWords, setUnknownUserWords] = useState([{}]);
+  const [positionCurrentWord, setPositionCurrentWord] = useState(0);
+  const [endedCards, setEndedCards] = useState(false);
   const [showBackCard, setShowBackCard] = useState(false);
+
+  const [findAll] = useDao({
+    onCompleted: (arrayObjects) => {
+      setUnknownUserWords(arrayObjects);
+    },
+  });
+
+  useEffect(() => {
+    findAll("@storage_userWords");
+  }, []);
+
+  const onPressNextCard = () => {
+    if (positionCurrentWord + 1 < unknownUserWords.length) {
+      setPositionCurrentWord(positionCurrentWord + 1);
+    } else {
+      setEndedCards(true)
+    }
+  };
 
   return (
     <Container>
@@ -35,16 +54,27 @@ const Cards = ({ route, navigation }) => {
           <Title style={styles.headerTitle}>Cards</Title>
         </Body>
       </Header>
-      <Content padder>
-        {(showBackCard && (
-          <BackCard clickGoBack={() => setShowBackCard(false)} />
-        )) || <FrontCard clickDontKnow={() => setShowBackCard(true)} />}
-      </Content>
+      {(endedCards && (
+        <Content>
+          <Text>No more cards!</Text>
+        </Content>
+      )) || (
+        <Content padder>
+          {(showBackCard && (
+            <BackCard clickGoBack={() => setShowBackCard(false)} />
+          )) ||
+            (unknownUserWords && (
+              <FrontCard
+                word={unknownUserWords[positionCurrentWord].word}
+                clickDontKnow={() => setShowBackCard(true)}
+              />
+            ))}
+        </Content>
+      )}
+
       <Footer>
         <Button
-          onPress={() => {
-            () => {};
-          }}
+          onPress={() => onPressNextCard()}
           active
           style={styles.footerButton}
         >
