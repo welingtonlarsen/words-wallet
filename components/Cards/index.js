@@ -26,7 +26,8 @@ const Cards = ({ route, navigation }) => {
 
   const [findAll] = useDao({
     onCompleted: (arrayObjects) => {
-      setUnknownUserWords(arrayObjects);
+      setUnknownUserWords(arrayObjects.filter(object => !object.learned));
+      console.log(arrayObjects)
     },
   });
 
@@ -54,14 +55,15 @@ const Cards = ({ route, navigation }) => {
           <Title style={styles.headerTitle}>Cards</Title>
         </Body>
       </Header>
-      {(endedCards && (
+      
+      {((endedCards || !unknownUserWords.length) && (
         <Content>
           <Text>No more cards!</Text>
         </Content>
       )) || (
         <Content padder>
           {(showBackCard && (
-            <BackCard clickGoBack={() => setShowBackCard(false)} />
+            <BackCard word={unknownUserWords[positionCurrentWord]} clickGoBack={() => setShowBackCard(false)} />
           )) ||
             (unknownUserWords && (
               <FrontCard

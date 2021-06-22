@@ -98,6 +98,7 @@ const WordRegister = ({ route, navigation }) => {
       });
     } else {
       userWordsData.push({
+        learned: false,
         categoryId: category.id,
         wordType: formHandle.wordType,
         word: formHandle.word,

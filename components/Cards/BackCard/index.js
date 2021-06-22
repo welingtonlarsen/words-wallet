@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Container,
   Content,
   Card,
   CardItem,
@@ -8,28 +7,49 @@ import {
   Body,
   Right,
   Button,
+  H3,
 } from "native-base";
 import { StyleSheet } from "react-native";
+import {updateObjectInTable} from '../../../database/dataBaseUseCase'
 
-const BackCard = ({ clickGoBack }) => {
+const BackCard = ({ clickGoBack, word }) => {
   return (
     <Content padder>
       <Card>
-        <CardItem header bordered>
-          <Text>Word</Text>
+        <CardItem style={styles.cardTitleContainer} header bordered>
+          <Text style={styles.cardTitle}>{word.word}</Text>
         </CardItem>
+        {word.wordType === 1 && (
+          <Content>
+            <CardItem bordered>
+              <Body>
+                <Text>
+                  <H3 style={styles.h3}>Past Simple: </H3>
+                  {word.pastSimple}
+                </Text>
+              </Body>
+            </CardItem>
+            <CardItem bordered>
+              <Body>
+                <Text>
+                  <H3 style={styles.h3}>Past Participle: </H3>
+                  {word.pastParticiple}
+                </Text>
+              </Body>
+            </CardItem>
+          </Content>
+        )}
         <CardItem bordered>
           <Body>
             <Text>
-              Observations and more things NativeBase is a free and open source
-              framework that enable developers to build high-quality mobile apps
-              using React Native iOS and Android apps with a fusion of ES6.
+              <H3 style={styles.h3}>Annotations: </H3>
+              {word.annotations}
             </Text>
           </Body>
         </CardItem>
         <CardItem footer bordered>
           <Right>
-            <Button rounded success style={{ marginRight: -70, maxHeight: 40 }}>
+            <Button onPress={() => updateObjectById(word.word, "@storage_userWords", 'learned', true)} rounded success style={{ marginRight: -70, maxHeight: 40 }}>
               <Text>Learned</Text>
             </Button>
           </Right>
@@ -51,4 +71,17 @@ const BackCard = ({ clickGoBack }) => {
 
 export default BackCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  cardTitleContainer: {
+    justifyContent: "center",
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+  },
+  h3: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+});

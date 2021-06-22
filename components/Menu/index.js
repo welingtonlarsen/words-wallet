@@ -16,6 +16,12 @@ import {
 import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const resetApp = () => {
+  AsyncStorage.getAllKeys()
+    .then((keys) => AsyncStorage.multiRemove(keys))
+    .then(() => alert("success"));
+};
+
 const Menu = ({ route, navigation }) => {
   return (
     <Container>
@@ -25,9 +31,12 @@ const Menu = ({ route, navigation }) => {
         </Body>
       </Header>
       <Content>
-        <ListItem icon onPress={() => navigation.push('Categories')}>
+        <ListItem icon onPress={() => navigation.push("Categories")}>
           <Left>
-            <Button style={{ backgroundColor: "#828889" }} onPress={() => navigation.push('Categories')}>
+            <Button
+              style={{ backgroundColor: "#828889" }}
+              onPress={() => navigation.push("Categories")}
+            >
               <Icon active name="grid" />
             </Button>
           </Left>
@@ -35,9 +44,12 @@ const Menu = ({ route, navigation }) => {
             <Text>Categories</Text>
           </Body>
         </ListItem>
-        <ListItem icon onPress={() => navigation.push('Cards')}>
+        <ListItem icon onPress={() => navigation.push("Cards")}>
           <Left>
-            <Button style={{ backgroundColor: "#828889" }} onPress={() => navigation.push('Cards')}>
+            <Button
+              style={{ backgroundColor: "#828889" }}
+              onPress={() => navigation.push("Cards")}
+            >
               <Icon active name="bookmarks" />
             </Button>
           </Left>
@@ -68,5 +80,5 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-  }
+  },
 });
