@@ -25,6 +25,6 @@ export async function updateObjectById(id, table, prop, newValue) {
 }
 
 const findAllForTable = async (tableName) => {
-  const stringValue = await AsyncStorage.getItem(table);
+  const stringValue = await AsyncStorage.getItem(tableName);
   return JSON.parse(stringValue);
 };

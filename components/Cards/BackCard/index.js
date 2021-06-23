@@ -10,9 +10,14 @@ import {
   H3,
 } from "native-base";
 import { StyleSheet } from "react-native";
-import {updateObjectInTable} from '../../../database/dataBaseUseCase'
+import {updateObjectById} from '../../../database/dataBaseUseCase'
 
-const BackCard = ({ clickGoBack, word }) => {
+const BackCard = ({ clickGoBack, word, notifyIsLearned }) => {
+  const onPressLearned = () => {
+    updateObjectById(word.word, "@storage_userWords", 'learned', true)
+    notifyIsLearned()
+  }
+
   return (
     <Content padder>
       <Card>
@@ -49,7 +54,7 @@ const BackCard = ({ clickGoBack, word }) => {
         </CardItem>
         <CardItem footer bordered>
           <Right>
-            <Button onPress={() => updateObjectById(word.word, "@storage_userWords", 'learned', true)} rounded success style={{ marginRight: -70, maxHeight: 40 }}>
+            <Button onPress={() => onPressLearned()} rounded success style={{ marginRight: -70, maxHeight: 40 }}>
               <Text>Learned</Text>
             </Button>
           </Right>

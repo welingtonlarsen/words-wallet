@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Content, Card, CardItem, Text, Button } from "native-base";
 import { StyleSheet } from "react-native";
 
-const FrontCard = ({ word, clickDontKnow }) => {
+const FrontCard = ({ word, clickDontKnow, onPressLearned }) => {
 
   return (
     <Content padder>
@@ -11,7 +11,7 @@ const FrontCard = ({ word, clickDontKnow }) => {
           <Text style={styles.word}>{word}</Text>
         </CardItem>
         <CardItem style={styles.cardItemFooter} footer bordered>
-          <Button onPress={() => {}} rounded success style={styles.buttom}>
+          <Button onPress={() => onPressLearned()} rounded success style={styles.buttom}>
             <Text>Learned</Text>
           </Button>
           <Button

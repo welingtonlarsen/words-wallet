@@ -10,6 +10,7 @@ import {
   Button,
   Icon,
   Footer,
+  H1,
 } from "native-base";
 import { StyleSheet } from "react-native";
 
@@ -17,17 +18,18 @@ import FrontCard from "./FrontCard";
 import BackCard from "./BackCard";
 
 import useDao from "../../database/useDao";
+import { updateObjectById } from "../../database/dataBaseUseCase";
 
 const Cards = ({ route, navigation }) => {
-  const [unknownUserWords, setUnknownUserWords] = useState([{}]);
+  const [unknownUserWords, setUnknownUserWords] = useState([]);
   const [positionCurrentWord, setPositionCurrentWord] = useState(0);
   const [endedCards, setEndedCards] = useState(false);
   const [showBackCard, setShowBackCard] = useState(false);
 
   const [findAll] = useDao({
     onCompleted: (arrayObjects) => {
-      setUnknownUserWords(arrayObjects.filter(object => !object.learned));
-      console.log(arrayObjects)
+      arrayObjects &&
+        setUnknownUserWords(arrayObjects.filter((object) => !object.learned));
     },
   });
 
@@ -35,11 +37,26 @@ const Cards = ({ route, navigation }) => {
     findAll("@storage_userWords");
   }, []);
 
+  const onPressLearnedCallBack = () => {
+    updateObjectById(
+      unknownUserWords[positionCurrentWord].word,
+      "@storage_userWords",
+      "learned",
+      true
+    );
+    onPressNextCard();
+  };
+
+  const notifyIsLearnedCallBack = () => {
+    onPressNextCard();
+    setShowBackCard(false);
+  };
+
   const onPressNextCard = () => {
     if (positionCurrentWord + 1 < unknownUserWords.length) {
       setPositionCurrentWord(positionCurrentWord + 1);
     } else {
-      setEndedCards(true)
+      setEndedCards(true);
     }
   };
 
@@ -55,20 +72,25 @@ const Cards = ({ route, navigation }) => {
           <Title style={styles.headerTitle}>Cards</Title>
         </Body>
       </Header>
-      
       {((endedCards || !unknownUserWords.length) && (
-        <Content>
-          <Text>No more cards!</Text>
-        </Content>
+        <Container style={styles.noMoreCardsContainer}>
+          <Text style={styles.noMoreCardsText}>No cards!</Text>
+          <Text>All your words were learned.</Text>
+        </Container>
       )) || (
         <Content padder>
           {(showBackCard && (
-            <BackCard word={unknownUserWords[positionCurrentWord]} clickGoBack={() => setShowBackCard(false)} />
+            <BackCard
+              word={unknownUserWords[positionCurrentWord]}
+              clickGoBack={() => setShowBackCard(false)}
+              notifyIsLearned={() => notifyIsLearnedCallBack()}
+            />
           )) ||
             (unknownUserWords && (
               <FrontCard
                 word={unknownUserWords[positionCurrentWord].word}
                 clickDontKnow={() => setShowBackCard(true)}
+                onPressLearned={() => onPressLearnedCallBack()}
               />
             ))}
         </Content>
@@ -94,7 +116,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#828889",
   },
   headerTitle: {
-    fontSize: 20,
+    textAlign: "center",
+    fontSize: 25,
+    marginLeft: 45,
   },
   footerButton: {
     height: "100%",
@@ -105,5 +129,14 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  noMoreCardsContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 200,
+  },
+  noMoreCardsText: {
+    fontWeight: "bold",
+    fontSize: 45,
   },
 });

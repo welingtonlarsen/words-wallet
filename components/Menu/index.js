@@ -26,9 +26,7 @@ const Menu = ({ route, navigation }) => {
   return (
     <Container>
       <Header noShadow style={styles.header} androidStatusBarColor="black">
-        <Body>
           <Title style={styles.headerTitle}>{"Menu"}</Title>
-        </Body>
       </Header>
       <Content>
         <ListItem icon onPress={() => navigation.push("Categories")}>
@@ -59,7 +57,7 @@ const Menu = ({ route, navigation }) => {
         </ListItem>
         <ListItem icon>
           <Left>
-            <Button style={{ backgroundColor: "#828889" }}>
+            <Button onPress={() => resetApp()} style={{ backgroundColor: "#828889" }}>
               <Icon active name="settings" />
             </Button>
           </Left>
@@ -79,6 +77,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#828889",
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 25,
+    textAlignVertical: 'center'
   },
 });
