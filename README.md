@@ -8,7 +8,7 @@
 
 # Words Wallet
 
-This mobile app is still in development. It is like a wallet of english words. In other words, with this app the user can save new learned words to review them in the future.
+This mobile app is college work and it is still in development. It is like a wallet of English words. Therefore, with this app, the user can save newly learned words to review them in the future.
 
 ![](https://img.shields.io/badge/Autor-Welington%20Larsen-brightgreen)
 ![](https://img.shields.io/badge/Language-Javascript-brightgreen)
