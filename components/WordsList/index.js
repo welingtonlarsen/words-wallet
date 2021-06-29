@@ -118,7 +118,7 @@ const WordsList = ({ route, navigation }) => {
                   itemDivider
                   style={styles.listItemDivisor}
                 >
-                  <Text>{letter}</Text>
+                  <Text key={letter + 'text'} >{letter}</Text>
                 </ListItem>
                 {wordsForLetter.map((word, position) => {
                   return (
@@ -126,7 +126,7 @@ const WordsList = ({ route, navigation }) => {
                       key={word + position}
                       style={styles.listItem}
                       onPress={() =>
-                        navigation.navigate("WordRegister", {
+                        navigation.push("WordDetail", {
                           wordObject: filterWordFromUserWordsData(word),
                           category
                         })

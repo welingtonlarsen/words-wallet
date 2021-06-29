@@ -34,6 +34,7 @@ const WordRegister = ({ route, navigation }) => {
   const { wordObject, category } = route.params ? route.params : {};
 
   useEffect(() => {
+    console.log(wordObject)
     if (wordObject && wordObject.wordType !== 1) {
       setFormHandle({
         wordType: wordObject.wordType,

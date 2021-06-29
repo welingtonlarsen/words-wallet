@@ -1,5 +1,30 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+export async function updateAllObjectById(id, table, newValue) {
+  try {
+    const objects = await findAllForTable(table)
+    
+    var objectPositionInObjects = 0;
+    const object = objects.find((object) => {
+      if (object.word === id) {
+        return true;
+      } else {
+        objectPositionInObjects++;
+        return false;
+      }
+    });
+
+    objects.splice(objectPositionInObjects, 1);
+    objects.push(newValue);
+    console.log(objects)
+
+    await AsyncStorage.setItem(table, JSON.stringify(objects));
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+
 export async function updateObjectById(id, table, prop, newValue) {
   try {
     const objects = await findAllForTable(table)
