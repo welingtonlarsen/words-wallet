@@ -12,21 +12,49 @@ import {
   Body,
   Right,
   Switch,
+  ActionSheet,
 } from "native-base";
 import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const resetApp = () => {
-  AsyncStorage.getAllKeys()
-    .then((keys) => AsyncStorage.multiRemove(keys))
-    .then(() => alert("success"));
-};
+var DESTRUCTIVE_INDEX = 0;
+var CANCEL_INDEX = 1;
 
 const Menu = ({ route, navigation }) => {
+  const [clicked, setClicked] = useState({});
+
+  var BUTTONS = [
+    { text: "Yes, reset my app!", icon: "trash", iconColor: "#fa213b" },
+    { text: "Cancel", icon: "close", iconColor: "#25de5b" },
+    { text: "" },
+  ];
+
+  const showActionSheet = () => {
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: CANCEL_INDEX,
+        destructiveButtonIndex: DESTRUCTIVE_INDEX,
+        title: "Are you sure you want to reset the app?",
+      },
+      (buttonIndex) => {
+        if (buttonIndex == 0) {
+          resetApp();
+        }
+      }
+    );
+  };
+
+  const resetApp = () => {
+    AsyncStorage.getAllKeys()
+      .then((keys) => AsyncStorage.multiRemove(keys))
+      .then(() => alert("App reset successfully!"));
+  };
+
   return (
     <Container>
       <Header noShadow style={styles.header} androidStatusBarColor="black">
-          <Title style={styles.headerTitle}>{"Menu"}</Title>
+        <Title style={styles.headerTitle}>{"Menu"}</Title>
       </Header>
       <Content>
         <ListItem icon onPress={() => navigation.push("Categories")}>
@@ -55,14 +83,17 @@ const Menu = ({ route, navigation }) => {
             <Text>Cards</Text>
           </Body>
         </ListItem>
-        <ListItem icon>
+        <ListItem icon onPress={() => showActionSheet()}>
           <Left>
-            <Button onPress={() => resetApp()} style={{ backgroundColor: "#828889" }}>
+            <Button
+              onPress={() => showActionSheet()}
+              style={{ backgroundColor: "#828889" }}
+            >
               <Icon active name="settings" />
             </Button>
           </Left>
           <Body>
-            <Text>Configurations</Text>
+            <Text>Reset app</Text>
           </Body>
         </ListItem>
       </Content>
@@ -78,6 +109,6 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 25,
-    textAlignVertical: 'center'
+    textAlignVertical: "center",
   },
 });
