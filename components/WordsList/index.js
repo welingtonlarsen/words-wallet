@@ -11,10 +11,12 @@ import {
   Left,
   Icon,
   Body,
-  Title
+  Title,
+  Right
 } from "native-base";
 import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {deleteById} from '../../database/dataBaseUseCase'
 
 const WordsList = ({ route, navigation }) => {
   const { category } = route.params ? route.params : {};
@@ -68,7 +70,8 @@ const WordsList = ({ route, navigation }) => {
       const finalObject = {};
       alphabetData.forEach((letter, position) => {
         const words = userWordsData.filter(
-          (wordObj) => wordObj.word[0] === letter && wordObj.categoryId === category.id
+          (wordObj) =>
+            wordObj.word[0] === letter && wordObj.categoryId === category.id
         );
         finalObject[letter] = words.map((wordObj) => wordObj.word);
       });
@@ -82,7 +85,12 @@ const WordsList = ({ route, navigation }) => {
 
   const goToDetailsPage = () => {
     navigation.navigate("Categories");
-  }
+  };
+
+  const deleteWord = async (wordId) => {
+    await deleteById(wordId, "@storage_userWords");
+    getUserWordsStoragedData()
+  };
 
   if (!alphabeticWords) {
     return (
@@ -118,7 +126,7 @@ const WordsList = ({ route, navigation }) => {
                   itemDivider
                   style={styles.listItemDivisor}
                 >
-                  <Text key={letter + 'text'} >{letter}</Text>
+                  <Text key={letter + "text"}>{letter}</Text>
                 </ListItem>
                 {wordsForLetter.map((word, position) => {
                   return (
@@ -128,11 +136,28 @@ const WordsList = ({ route, navigation }) => {
                       onPress={() =>
                         navigation.push("WordDetail", {
                           wordObject: filterWordFromUserWordsData(word),
-                          category
+                          category,
                         })
                       }
                     >
-                      <Text>{word}</Text>
+                      <Left>
+                        <Text>{word}</Text>
+                      </Left>
+                      <Right>
+                        <Button
+                          transparent
+                          style={{ height: 20, marginRight: -20 }}
+                          onPress={() => deleteWord(word)}
+                        >
+                          <Icon
+                            style={{
+                              backgroundColor: "transparent",
+                              color: "#7a7a7a",
+                            }}
+                            name="trash"
+                          />
+                        </Button>
+                      </Right>
                     </ListItem>
                   );
                 })}
@@ -144,9 +169,11 @@ const WordsList = ({ route, navigation }) => {
 
       <Footer>
         <Button
-          onPress={() => navigation.push("WordRegister", {
-            category
-          })}
+          onPress={() =>
+            navigation.push("WordRegister", {
+              category,
+            })
+          }
           active
           style={styles.button}
         >

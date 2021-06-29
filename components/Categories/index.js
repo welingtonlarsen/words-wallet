@@ -18,12 +18,13 @@ import {
 import { StyleSheet } from "react-native";
 import { useState } from "react/cjs/react.development";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { deleteById } from "../../database/dataBaseUseCase";
 
 const Categories = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetchUserCategoriesInAsyncStorage()
+    fetchUserCategoriesInAsyncStorage();
   }, []);
 
   const fetchUserCategoriesInAsyncStorage = async () => {
@@ -39,15 +40,20 @@ const Categories = ({ navigation }) => {
 
   const goToCategoryWordsList = (category) => {
     navigation.push("WordsList", {
-      category
+      category,
     });
-  }
+  };
+
+  const deleteCategory = async (categoryId) => {
+    await deleteById(categoryId, "@storage_userCategories");
+    fetchUserCategoriesInAsyncStorage()
+  };
 
   return (
     <Container>
       <Header noShadow style={styles.header} androidStatusBarColor="black">
         <Left>
-          <Button transparent onPress={() => navigation.navigate('Menu')}>
+          <Button transparent onPress={() => navigation.navigate("Menu")}>
             <Icon name="arrow-back" />
           </Button>
         </Left>
@@ -60,12 +66,27 @@ const Categories = ({ navigation }) => {
         <List>
           {categories.map((category) => {
             return (
-              <ListItem key={category.id} onPress={() => goToCategoryWordsList(category)}>
+              <ListItem
+                key={category.id}
+                onPress={() => goToCategoryWordsList(category)}
+              >
                 <Left>
                   <Text>{category.categoryName}</Text>
                 </Left>
                 <Right>
-                  <Icon name="arrow-forward" />
+                  <Button
+                    transparent
+                    style={{ height: 20, marginRight: -20 }}
+                    onPress={() => deleteCategory(category.id)}
+                  >
+                    <Icon
+                      style={{
+                        backgroundColor: "transparent",
+                        color: "#7a7a7a",
+                      }}
+                      name="trash"
+                    />
+                  </Button>
                 </Right>
               </ListItem>
             );
