@@ -1,6 +1,6 @@
 <div align="center">
 
-![](https://img.shields.io/badge/Status-Under%20Development-orange)
+![](https://img.shields.io/badge/Status-Done-brightgreen)
 
 </div>
 
@@ -31,3 +31,5 @@ This mobile app is college work and it is still in development. It is like a wal
   ### Run the application (you can use npm or yarn)
   - 1° command: `npm install`
   - 2° command: `npm start`
+- Expo
+  - Run in andoid at expo
