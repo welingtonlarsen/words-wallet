@@ -32,4 +32,4 @@ This mobile app is college work and it is still in development. It is like a wal
   - 1° command: `npm install`
   - 2° command: `npm start`
 - Expo
-  - Run in andoid at expo
+  - Run in android at expo
